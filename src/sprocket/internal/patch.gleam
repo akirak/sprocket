@@ -270,8 +270,11 @@ fn compare_child_at_index(
   new_child,
   index,
 ) -> Dict(Int, Patch) {
-  case list.at(old_children, index) {
-    Ok(old_child) -> {
+  case list.drop(old_children, index) {
+    [] -> {
+      dict.insert(acc, index, Insert(new_child))
+    }
+    [old_child, ..] -> {
       case create(old_child, new_child) {
         NoOp -> {
           acc
@@ -280,9 +283,6 @@ fn compare_child_at_index(
           dict.insert(acc, index, patch)
         }
       }
-    }
-    Error(Nil) -> {
-      dict.insert(acc, index, Insert(new_child))
     }
   }
 }

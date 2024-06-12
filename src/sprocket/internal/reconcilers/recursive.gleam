@@ -260,19 +260,15 @@ fn get_prev_matching_child_by_index(
 ) -> Option(ReconciledElement) {
   case prev {
     Some(ReconciledElement(_, _, _, children)) -> {
-      case list.at(children, index) {
-        Ok(prev_child) -> {
-          maybe_matching_el(prev_child, child)
-        }
-        Error(Nil) -> None
+      case list.drop(children, index) {
+        [] -> None
+        [prev_child, ..] -> maybe_matching_el(prev_child, child)
       }
     }
     Some(ReconciledFragment(_, children)) -> {
-      case list.at(children, index) {
-        Ok(prev_child) -> {
-          maybe_matching_el(prev_child, child)
-        }
-        Error(Nil) -> None
+      case list.drop(children, index) {
+        [] -> None
+        [prev_child, ..] -> maybe_matching_el(prev_child, child)
       }
     }
     _ -> None
